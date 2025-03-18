@@ -14,22 +14,22 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-
 // Necessary for Next auth
 model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? // @db.Text
-    access_token             String? // @db.Text
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? // @db.Text
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
     refresh_token_expires_in Int?
 
     @@unique([provider, providerAccountId])
@@ -43,8 +43,18 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
 model User {
     id            String    @id @default(cuid())
+    firstname     String?
+    surname       String?
     name          String?
     email         String?   @unique
     emailVerified DateTime?
@@ -52,14 +62,64 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
-    firstname     String?
-    surname       String?
+    group    Group?  @relation(fields: [groupId], references: [id])
+    groupId  String?
+    subgroup Int     @default(1)
+
+    studentTask StudentsOnTasks[]
+    tutorTask   Squad[]
+    grade       Grade[]
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+model Group {
+    id    String @id @default(cuid())
+    name  String @unique
+    users User[]
+}
 
-    @@unique([identifier, token])
+// Лекции, лабы-пары, лабы-задания ...
+model TaskType {
+    id    String @id @default(cuid())
+    name  String @unique
+    tasks Task[]
+}
+
+model Task {
+    id    String @id @default(cuid())
+    name  String @unique
+    value Int    @default(1)
+
+    taskType   TaskType @relation(fields: [taskTypeId], references: [id])
+    taskTypeId String
+    squades    Squad[]
+    grades     Grade[]
+}
+
+model Squad {
+    id      String   @id @default(cuid())
+    task    Task     @relation(fields: [taskId], references: [id])
+    taskId  String
+    date    DateTime
+    tutor   User?    @relation(fields: [tutorId], references: [id])
+    tutorId String?
+
+    StudentsOnTasks StudentsOnTasks[]
+}
+
+model StudentsOnTasks {
+    student   User   @relation(fields: [studentId], references: [id])
+    studentId String
+    squad     Squad  @relation(fields: [squadId], references: [id], onDelete: Cascade)
+    squadId   String
+
+    @@id([studentId, squadId])
+}
+
+model Grade {
+    id        String @id @default(cuid())
+    task      Task   @relation(fields: [taskId], references: [id])
+    taskId    String
+    student   User   @relation(fields: [studentId], references: [id])
+    studentId String
+    value     Int
 }
