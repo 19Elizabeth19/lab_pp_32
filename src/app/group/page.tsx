@@ -4,6 +4,7 @@ import Pagination from "../ui/pagination";
 import GroupTable from "../_components/group/GroupTable";
 import { AddUser } from "../_components/user/addUser";
 import { AddGroup } from "../_components/group/addGroup";
+import { auth } from "~/server/auth";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -22,11 +23,11 @@ export default async function Page(props: {
   });
 
   const pages = Math.ceil(Number(count) / size);
-
+  const role = (await auth())?.user.role;
   return (
     <div>
       <h1> group page </h1>
-      <AddGroup />
+      {role === "ADMIN" && <AddGroup />}
       <GroupTable groups={groups} />
       <Pagination totalPages={pages} />
     </div>

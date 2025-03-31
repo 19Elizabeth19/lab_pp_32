@@ -1,11 +1,13 @@
 import Link from "next/link";
 import React from "react";
 import { deleteUser, updateUser } from "~/app/api/action/user";
+import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 
 export default async function Page(
   props: { params: Promise<{ id: string }> }
 ) {
+  const role = (await auth())?.user.role;
   const params = await props.params;
   const user = await db.user.findUnique(
     { 
@@ -24,7 +26,7 @@ export default async function Page(
       </main>
     );
 
-  return (
+  if(role == "ADMIN") return (
     <main>
       <form action={updateUser} className="form-control">
         <div className="flex max-w-xs flex-col space-y-2">
@@ -53,6 +55,17 @@ export default async function Page(
             className="input input-bordered"
             defaultValue={user.surname ?? ""}
           /> 
+           <label>Роль</label>
+          <select
+            name="role"
+            required
+            className="select select-bordered"
+            defaultValue={user.role ?? "USER"}
+          >
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+            <option value="TUTOR">TUTOR</option>
+          </select>
           {groupJSX}         
           <button type="submit" className="btn btn-primary">
             Обновить
@@ -69,4 +82,15 @@ export default async function Page(
       </form>
     </main>
   );
+
+  return (
+    <main>
+      <h1>Данные пользователя</h1>
+      <p>Электронная почта: {user.email}</p>
+      <p>Имя: {user.firstname}</p>
+      <p>Фамилия: {user.surname}</p>
+      <p>Роль: {user.role}</p>
+      {groupJSX}
+    </main>
+  )
 }

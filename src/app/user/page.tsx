@@ -23,11 +23,11 @@ export default async function Page(props: {
     take: size,
   });
   const pages = Math.ceil(Number(count) / size);
-
+  const role = (await auth())?.user.role;
   return (
     <div>
       <h1> user page </h1>
-      <AddUser />
+      {role === "ADMIN" && <AddUser />}
       <UserTable users={users} />
       <Pagination totalPages={pages} />
     </div>

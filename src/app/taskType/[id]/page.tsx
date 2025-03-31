@@ -2,13 +2,14 @@ import React from "react";
 import { AddTask } from "~/app/_components/task/add";
 import { TaskTable } from "~/app/_components/task/table";
 import { deleteTaskType, updateTaskType } from "~/app/api/action/taskType";
+import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 
 export default async function Page(props: { 
   params: Promise<{ id: string }>,
 }) {
   const params = await props.params;
-  const taskType  = await db.taskType.findUnique({ where: { id: params.id } });
+  const taskType = await db.taskType.findUnique({ where: { id: params.id } });
   const tasks = await db.task.findMany({ where: { taskTypeId: taskType?.id } });
 
   if (!taskType)
@@ -18,7 +19,11 @@ export default async function Page(props: {
       </main>
     );
 
-  return (
+  const role = (await auth())?.user.role;
+  const mode = role === "ADMIN" || role === "TUTOR";
+
+    
+  if(mode) return (
     <main>
       <form action={updateTaskType} className="form-control">
         <div className="flex max-w-xs flex-col space-y-2">
@@ -45,6 +50,12 @@ export default async function Page(props: {
         </div>
       </form>
       <AddTask taskType={taskType} />
+      <TaskTable tasks={tasks} />
+    </main>
+  );
+  return (
+    <main>
+      <h1>{taskType.name}</h1>
       <TaskTable tasks={tasks} />
     </main>
   );

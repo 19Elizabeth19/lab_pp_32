@@ -7,6 +7,7 @@ import {
   updateTask,
 } from "../../api/action/task";
 import { db } from "~/server/db";
+import { auth } from "~/server/auth";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -24,8 +25,10 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         <h1>Task not found</h1>
       </main>
     );
-
-  return (
+    const role = (await auth())?.user.role;
+    const mode = role === "ADMIN" || role === "TUTOR";
+  
+    if(mode) return (
     <main>
       <Link href={`/taskType/${task.taskTypeId}`} className="btn btn-primary">
         {taskType?.name}
@@ -102,6 +105,28 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           </button>
         </div>
       </form>
+    </main>
+  );
+
+  return (
+    <main>
+      <Link href={`/taskType/${task.taskTypeId}`} className="btn btn-primary">
+        {taskType?.name}
+      </Link>
+      <h1>{task.name}</h1>
+      <table className="m-4 box-border">
+        <tbody>
+          {task.squades.map((squad, index) => (
+            <tr key={squad.id}>
+              <td>
+                <Link href={`/squad/${squad.id}`} className="btn btn-primary">
+                  {"Поток " + (index + 1)}
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </main>
   );
 }

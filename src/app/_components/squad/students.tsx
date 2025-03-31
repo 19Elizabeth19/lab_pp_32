@@ -9,16 +9,17 @@ import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 export function Students({
   taskId,
   squadId,
+  mode,
 }: {
   taskId: string;
   squadId: string;
+  mode?: boolean;
 }) {
   // const h = api.post.hello.useQuery({ text: "world" });
   // console.log("\n\nTRPC\n\n", h.data);
   const [search, setSearch] = React.useState<string>("");
   const gradeInputRefs = React.useRef<HTMLInputElement[]>([]);
-  const students =
-    api.user.getStudentBySquad.useQuery({ squadId: squadId }).data ?? [];
+  const students = api.user.getStudentBySquad.useQuery({ squadId: squadId }).data ?? [];
   const grades = api.grade.getByTask.useQuery({ taskId }).data ?? [];
   const r = api.user.getByQuery.useQuery({ query: search }).data;
   const addStudentMutation = api.squad.addStudent.useMutation();
