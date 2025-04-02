@@ -21,17 +21,19 @@ export function Students({
   const gradeInputRefs = React.useRef<HTMLInputElement[]>([]);
   const students = api.user.getStudentBySquad.useQuery({ squadId: squadId }).data ?? [];
   const grades = api.grade.getByTask.useQuery({ taskId }).data ?? [];
-  const r = api.user.getByQuery.useQuery({ query: search }).data;
-  const addStudentMutation = api.squad.addStudent.useMutation();
-  const deleteStudentMutation = api.squad.deleteStudent.useMutation();
-  const createGradeMutation = api.grade.create.useMutation();
-  const utils = api.useUtils();
-
+  
   const studentsWithGrades = students.map((s) => {
     const g = grades.find((g) => g.studentId === s.id);
     return { ...s, value: g?.value ?? 0 };
   });
   console.log(studentsWithGrades);
+  
+  if (mode){
+  const r = api.user.getByQuery.useQuery({ query: search }).data;
+  const addStudentMutation = api.squad.addStudent.useMutation();
+  const deleteStudentMutation = api.squad.deleteStudent.useMutation();
+  const createGradeMutation = api.grade.create.useMutation();
+  const utils = api.useUtils();
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -131,4 +133,18 @@ export function Students({
       )}
     </div>
   );
+}
+return (
+  <table className="m-4 box-border">
+    <tbody>
+      {studentsWithGrades.map((s) => (
+        <tr key={s.id}>
+          <td className="px-2">{s?.firstname}</td>
+          <td className="px-2">{s?.surname}</td>
+          <td className="px-2">{s.value}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
 }
