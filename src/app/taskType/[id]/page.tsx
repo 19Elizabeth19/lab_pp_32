@@ -1,6 +1,8 @@
 import React from "react";
+import { AdminComponentTaskType } from "~/app/_components/admin";
 import { AddTask } from "~/app/_components/task/add";
 import { TaskTable } from "~/app/_components/task/table";
+import { UserComponentTaskType } from "~/app/_components/user";
 import { deleteTaskType, updateTaskType } from "~/app/api/action/taskType";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
@@ -23,40 +25,47 @@ export default async function Page(props: {
   const mode = role === "ADMIN" || role === "TUTOR";
 
     
-  if(mode) return (
-    <main>
-      <form action={updateTaskType} className="form-control">
-        <div className="flex max-w-xs flex-col space-y-2">
-          <input type="hidden" name="id" defaultValue={taskType.id ?? ""} />
-          <label>Название</label>
-          <input
-            type="text"
-            name="name"
-            required
-            className="input input-bordered"
-            defaultValue={taskType.name ?? ""}
-          />
-          <button type="submit" className="btn btn-primary">
-            Обновить
-          </button>
-        </div>
-      </form>
-      <form action={deleteTaskType} className="form-control">
-        <div className="flex max-w-xs flex-col space-y-2">
-          <input type="hidden" name="id" defaultValue={taskType.id ?? ""} />
-          <button type="submit" className="btn btn-primary">
-            Удалить
-          </button>
-        </div>
-      </form>
-      <AddTask taskType={taskType} />
-      <TaskTable tasks={tasks} />
-    </main>
-  );
-  return (
-    <main>
-      <h1>{taskType.name}</h1>
-      <TaskTable tasks={tasks} />
-    </main>
-  );
+  // if(mode) return (
+  //   <main>
+  //     <form action={updateTaskType} className="form-control">
+  //       <div className="flex max-w-xs flex-col space-y-2">
+  //         <input type="hidden" name="id" defaultValue={taskType.id ?? ""} />
+  //         <label>Название</label>
+  //         <input
+  //           type="text"
+  //           name="name"
+  //           required
+  //           className="input input-bordered"
+  //           defaultValue={taskType.name ?? ""}
+  //         />
+  //         <button type="submit" className="btn btn-primary">
+  //           Обновить
+  //         </button>
+  //       </div>
+  //     </form>
+  //     <form action={deleteTaskType} className="form-control">
+  //       <div className="flex max-w-xs flex-col space-y-2">
+  //         <input type="hidden" name="id" defaultValue={taskType.id ?? ""} />
+  //         <button type="submit" className="btn btn-primary">
+  //           Удалить
+  //         </button>
+  //       </div>
+  //     </form>
+  //     <AddTask taskType={taskType} />
+  //     <TaskTable tasks={tasks} />
+  //   </main>
+  // );
+  // return (
+  //   <main>
+  //     <h1>{taskType.name}</h1>
+  //     <TaskTable tasks={tasks} />
+  //   </main>
+  // );
+
+  if (mode) {
+    return <AdminComponentTaskType taskType={taskType} tasks={tasks} />;
+  }
+
+  return <UserComponentTaskType taskType={taskType} tasks={tasks} />;
+
 }
