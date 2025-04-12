@@ -5,8 +5,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "~/server/db";
+import { isAdmin } from "../auth/check";
+// import { isAdmin } from "../auth/checks";
 
 export async function createUser(formData: FormData) {
+  if(!(await isAdmin())) 
+    throw new Error("Unauthorized");
     const fd = z
       .object({
         email: z.string().email(),
@@ -51,24 +55,3 @@ export async function createUser(formData: FormData) {
     await db.user.update({ where: { id: fd.id }, data: fd });
     revalidatePath("/user/"+fd.id);
   }
-
-  // export async function deleteUserfromGroup(formData: FormData) {
-  //   const fd = z
-  //     .object({
-  //       id_student: z.string(),
-  //       id_group: z.string(),
-  //     })
-  //     .parse({
-  //       id_student: formData.get("id_student"),
-  //       id_group: formData.get("id_group"),
-  //     });
-  //   await db.group.update({
-  //     where: { id: fd.id_group },
-  //     data: {
-  //       User: {
-  //         disconnect: { id: fd.id_student },
-  //       },
-  //     },
-  //   }); 
-  //   revalidatePath("/group/" + fd.id_group); 
-  // }

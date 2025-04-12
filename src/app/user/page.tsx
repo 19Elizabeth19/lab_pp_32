@@ -27,7 +27,7 @@ export default async function Page(props: {
   return (
     <div>
       <h1> user page </h1>
-      {role === "ADMIN" && <AddUser />}
+      {/* {role === "ADMIN" && <AddUser />} */}
       <UserTable users={users} />
       <Pagination totalPages={pages} />
     </div>
