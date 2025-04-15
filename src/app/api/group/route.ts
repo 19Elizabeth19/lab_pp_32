@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { sleep } from "~/lib/utils";
 import { db } from "~/server/db";
 
@@ -16,4 +16,16 @@ export async function GET(request: NextRequest) {
     headers: { "Content-Type": "application/json" },
   });
 }
+export async function POST(request: NextRequest) {
+  const { name } = await request.json();
+  const group = await db.group.create({
+    data: {
+      name,
+    },
+  });
 
+  return new Response(JSON.stringify(group), {
+    status: 201, 
+    headers: { "Content-Type": "application/json" },
+  });
+}

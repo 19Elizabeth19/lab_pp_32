@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "~/server/db";
 
 export async function PUT(
@@ -17,4 +17,17 @@ export async function PUT(
         status: 200,
         headers: { "Content-Type": "application/json" },
     });
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+ 
+  const deletedGroup = await db.group.delete({
+      where: { id },
+  });
+
+  return new Response(JSON.stringify(deletedGroup), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+  });
 }
