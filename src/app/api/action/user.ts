@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "~/server/db";
 import { isAdmin } from "../auth/check";
-// import { isAdmin } from "../auth/checks";
 
 export async function createUser(formData: FormData) {
   if(!(await isAdmin())) 
@@ -27,6 +26,8 @@ export async function createUser(formData: FormData) {
   }
 
   export async function deleteUser(formData: FormData) {
+    if(!(await isAdmin())) 
+      throw new Error("Unauthorized");
     const fd = z
       .object({
         id: z.string(),
@@ -39,6 +40,8 @@ export async function createUser(formData: FormData) {
   }
 
   export async function updateUser(formData: FormData) {
+    if(!(await isAdmin())) 
+      throw new Error("Unauthorized");
     const fd = z
       .object({
         id: z.string(),      

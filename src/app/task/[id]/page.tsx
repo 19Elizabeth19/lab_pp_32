@@ -10,8 +10,7 @@ import { db } from "~/server/db";
 import { auth } from "~/server/auth";
 import { AdminComponentTask } from "~/app/_components/admin";
 import { UserComponentTask } from "~/app/_components/user";
-// import AdminComponentTask from "~/app/_components/admin";
-// import UserComponentTask from "~/app/_components/user";
+
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -138,4 +137,5 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   }
 
   return <UserComponentTask task={task} taskType={taskType} />;
+
 }

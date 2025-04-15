@@ -15,10 +15,15 @@ export function Grade({
   const grades = api.grade.getByTask.useQuery({ taskId });
   const set = api.grade.create.useMutation();
   console.log(grades.data);
+  // const onSetHandler = () => {
+  //   set.mutate({ taskId, studentId, value: Number(valRef.current?.value) });
+  // };
   const onSetHandler = () => {
-    set.mutate({ taskId, studentId, value: Number(valRef.current?.value) });
+    set.mutate({
+      taskId, studentId, value: Number(valRef.current?.value),
+      squadTutorId: ""
+    });
   };
-
   return (
     <>
       <input

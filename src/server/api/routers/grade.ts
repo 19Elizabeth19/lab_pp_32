@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import isAdminOrCurrentTutor from "~/app/api/auth/check";
-// import { isAdminOrCurrentTutor } from "~/app/api/auth/check";
 
 export const gradeRouter = createTRPCRouter({
   create: protectedProcedure

@@ -6,9 +6,7 @@ import TutorSearch from "../../ui/tutorSearch";
 import { db } from "~/server/db";
 import { Students } from "../../_components/squad/students";
 import { auth } from "~/server/auth";
-// import { AdminComponentSquad } from "~/app/_components/admin";
-// import { UserComponentSquad } from "~/app/_components/user";
-// import { api } from "~/trpc/server";
+
 
 
 export default async function Page(props: {

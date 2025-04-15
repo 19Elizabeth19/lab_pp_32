@@ -28,7 +28,8 @@ export default async function Page(props: {
   return (
     <div>
       <h1> group page </h1>
-      {role === "ADMIN" && <AddGroup />}
+      {/* {role === "ADMIN" && <AddGroup />} */}
+      {<AddGroup />}
       {/* <GroupTable groups={groups} /> */}
       <GroupTable page={page} size={size} />
       <Pagination totalPages={pages} />

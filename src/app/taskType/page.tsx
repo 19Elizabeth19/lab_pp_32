@@ -27,7 +27,8 @@ export default async function Page(props: {
   
   return (
     <div>
-      {mode && <AddTaskGroup />}
+      {/* {mode && <AddTaskGroup />} */}
+      {<AddTaskGroup />}
       <TaskTypeTable tasks={taskGroups} />
       <Pagination totalPages={pages} />
     </div>

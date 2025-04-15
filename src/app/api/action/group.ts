@@ -4,8 +4,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "~/server/db";
+import { isAdmin } from "../auth/check";
 
 export async function createGroup(formData: FormData) {
+  if (!(await isAdmin())) {
+    throw new Error("Unauthorized");
+  }
   const fd = z
     .object({
       name: z.string(),
@@ -15,9 +19,13 @@ export async function createGroup(formData: FormData) {
     });
   await db.group.create({ data: fd });
   revalidatePath("/group");
+  
 }
 
 export async function deleteGroup(formData: FormData) {
+  if (!(await isAdmin())) {
+    throw new Error("Unauthorized");
+  }
     const fd = z
       .object({
         id: z.string(),
@@ -30,6 +38,9 @@ export async function deleteGroup(formData: FormData) {
   }
   
   export async function updateGroup(formData: FormData) {
+    if (!(await isAdmin())) {
+      throw new Error("Unauthorized");
+    }
     const fd = z
       .object({
         id: z.string(),
@@ -44,6 +55,9 @@ export async function deleteGroup(formData: FormData) {
   }
 
   export async function deleteUserFromGroup(formData: FormData) {
+    if (!(await isAdmin())) {
+      throw new Error("Unauthorized");
+    }
     const fd = z
       .object({
         id_student: z.string(),
@@ -65,6 +79,9 @@ export async function deleteGroup(formData: FormData) {
   }
 
   export async function addUserToGroup(formData: FormData) {
+    if (!(await isAdmin())) {
+      throw new Error("Unauthorized");
+    }
     const fd = z
       .object({
         id_student: z.string(),
