@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { CheckIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import type { Group } from "@prisma/client";
 import Link from "next/link";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function GroupTable({
   page,
@@ -14,6 +14,7 @@ export default function GroupTable({
 }) {
   const [groupNames, setGroupsNames] = React.useState<string[]>([]);
   const url = `/api/group?size=${size || 3}&page=${page || 1}`;
+  const queryClient = useQueryClient();
   
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["groups", page, size],
@@ -43,7 +44,9 @@ export default function GroupTable({
           return newNames;
         }
         return prev;
+        
       });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
     }
   });
 
@@ -53,6 +56,9 @@ export default function GroupTable({
         method: "DELETE",
       });
       return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["groups"] }); 
     },
   });
 
@@ -88,6 +94,7 @@ export default function GroupTable({
   function handleDeleteGroup(id: string) {
     deleteMutation.mutate(id);
   }
+  //инвалидировать квери когда выполняется удаление 
 
   return (
       <>

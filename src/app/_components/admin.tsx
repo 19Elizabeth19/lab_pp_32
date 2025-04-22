@@ -1,10 +1,5 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
-import { UserMinusIcon } from "@heroicons/react/24/outline";
-
-import { Students } from "~/app/_components/squad/students";
-import TutorSearch from "../ui/tutorSearch";
-
 import GroupUser from "~/app/_components/group/groupUser";
 import UserSearch from "~/app/ui/userSearch";
 import { deleteGroup, updateGroup } from "~/app/api/action/group";
@@ -12,114 +7,17 @@ import { TaskTable } from "~/app/_components/task/table";
 import { deleteTaskType, updateTaskType } from "~/app/api/action/taskType";
 import { AddTask } from "./task/add";
 import { deleteUser, updateUser } from "../api/action/user";
-import { db } from "~/server/db";
-import { deleteTutor } from "../api/action/squad";
+import { useQueryClient } from "@tanstack/react-query";
 
-
-  // export function AdminComponentSquad({
-  //   task,
-  //   tutor,
-  //   squadId,
-  //   query,
-  // }: {
-  //   task?: { id: string; name: string } | null;
-  //   tutor?: { id: string; firstname: string | null; surname: string | null } | null;
-  //   squadId: string;
-  //   query: string;
-  // }) {
-  //   return (
-  //     <main>
-  //       <Link href={`/task/${task?.id}`} className="btn btn-primary">
-  //         {task?.name || "Задача не назначена"}
-  //       </Link>
-  //       <div>
-  //         <table className="m-4 box-border">
-  //           <tbody>
-  //             <tr>
-  //               <td>Преподаватель:</td>
-  //               <td>
-  //                 {tutor ? tutor.firstname + " " + tutor.surname : "Не назначен"}
-  //               </td>
-  //               <td>
-  //                 <form action={deleteTutor} className="form-control">
-  //                   <input type="hidden" name="squadId" defaultValue={squadId} />
-  //                   <button type="submit">
-  //                     <UserMinusIcon className="w-6" />
-  //                   </button>
-  //                 </form>
-  //               </td>
-  //             </tr>
-  //           </tbody>
-  //         </table>
-  //         <TutorSearch query={query} squadId={squadId} />
-  //       </div>
-  //       <Students squadId={squadId} taskId={task?.id ?? ""} mode={true} squadTutorId={tutor?.id ?? ""} />
-  //     </main>
-  //   );
-  // }
-  // interface AdminComponentSquadProps {
-  //   task?: { id: string; name: string } | null;
-  //   tutor?: { id: string; firstname: string | null; surname: string | null } | null;
-  //   squad?: any; // Изменили тип на any
-  //   query: string;
-  // }
-  
-  // export function AdminComponentSquad({
-  //   task,
-  //   tutor,
-  //   squad,
-  //   query,
-  // }: AdminComponentSquadProps) {
-  
-  //   // Создаем локальную переменную squadData с ожидаемым типом и присваиваем squad, если он существует
-  //   const squadData: { id: string; name: string } | null = squad
-  //     ? { id: squad.id, name: squad.name }
-  //     : null;
-  
-  //   return (
-  //     <main>
-  //       {task && (
-  //         <Link href={`/task/${task.id}`} className="btn btn-primary">
-  //           {task.name}
-  //         </Link>
-  //       )}
-  //       <div>
-  //         <table className="m-4 box-border">
-  //           <tbody>
-  //             <tr>
-  //               <td>Преподаватель:</td>
-  //               <td>
-  //                 {tutor ? `${tutor.firstname} ${tutor.surname}` : "Не назначен"}
-  //               </td>
-  //               <td>
-  //                 {squadData && (  // Используем squadData здесь
-  //                   <form action={deleteTutor} className="form-control">
-  //                     <input type="hidden" name="squadId" defaultValue={squadData.id} />
-  //                     <button type="submit">
-  //                       <UserMinusIcon className="w-6" />
-  //                     </button>
-  //                   </form>
-  //                 )}
-  //               </td>
-  //             </tr>
-  //           </tbody>
-  //         </table>
-  //         <TutorSearch
-  //           query={query}
-  //           squadId={squadData?.id ?? ""}  // Используем squadData здесь
-  //         />
-  //       </div>
-  //       <Students squadId={squadData?.id ?? ""} taskId={task?.id ?? ""} mode={true} squadTutorId={tutor?.id ?? ""} /> // Используем squadData здесь
-  //     </main>
-  //   );
-  // }
 export function AdminComponentGroup({
     group,
     query,
   }: {
     group: { id: string; name: string };
     query: string;
-  }) {
+  })
+  
+  {
     return (
       <main>
         <form action={updateGroup} className="form-control">
