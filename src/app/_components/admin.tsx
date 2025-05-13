@@ -8,6 +8,7 @@ import { deleteTaskType, updateTaskType } from "~/app/api/action/taskType";
 import { AddTask } from "./task/add";
 import { deleteUser, updateUser } from "../api/action/user";
 import { useQueryClient } from "@tanstack/react-query";
+import { addUserTask, deleteTask, deleteUserTask, updateTask} from "~/app/api/action/task"
 
 export function AdminComponentGroup({
     group,
@@ -58,7 +59,7 @@ export function AdminComponentTask({ task, taskType }: { task: any; taskType: an
       <Link href={`/taskType/${task.taskTypeId}`} className="btn btn-primary">
         {taskType?.name}
       </Link>
-      <form action="/api/updateTask" className="form-control">
+      <form action={updateTask as any} className="form-control">
         <div className="flex max-w-xs flex-col space-y-2">
           <input type="hidden" name="id" defaultValue={task.id ?? ""} />
           <label>Название</label>
@@ -93,7 +94,7 @@ export function AdminComponentTask({ task, taskType }: { task: any; taskType: an
               </td>
               <td>
                 {index !== 0 && (
-                  <form action="/api/deleteUserTask" className="form-control">
+                  <form action={deleteUserTask} className="form-control">
                     <input
                       type="hidden"
                       name="id"
@@ -109,7 +110,7 @@ export function AdminComponentTask({ task, taskType }: { task: any; taskType: an
           ))}
         </tbody>
       </table>
-      <form action="/api/addUserTask" className="form-control">
+      <form action={addUserTask} className="form-control">
         <div className="flex max-w-xs flex-col space-y-2">
           <input type="hidden" name="id" defaultValue={task.id ?? ""} />
           <button type="submit" className="btn btn-primary">
@@ -117,7 +118,7 @@ export function AdminComponentTask({ task, taskType }: { task: any; taskType: an
           </button>
         </div>
       </form>
-      <form action="/api/deleteTask" className="form-control">
+      <form action={deleteUserTask} className="form-control">
         <div className="flex max-w-xs flex-col space-y-2">
           <input type="hidden" name="id" defaultValue={task.id ?? ""} />
           <input
