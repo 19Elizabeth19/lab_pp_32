@@ -12,6 +12,17 @@
         },
         "cwd": "${workspaceFolder}",
         "autoAttachChildProcesses": true,
-      }      
+      },
+      {
+        "name": "Next.js: Debug client-side",
+        "type": "chrome",  
+        "request": "launch",
+        "sourceMaps": true,
+        "url": "http://localhost:3000", 
+        //"webRoot": "${workspaceFolder}",
+        "sourceMapPathOverrides": {
+          "/turbopack/[project]/*": "${webRoot}/*"
+        }
+      }    
     ]
   }
